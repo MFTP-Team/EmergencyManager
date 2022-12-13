@@ -1,12 +1,14 @@
 package com.cpe.emergencymanager.controllers;
 
+import com.cpe.emergencymanager.model.FireEntity;
 import com.cpe.emergencymanager.model.FiremanEntity;
+import com.cpe.emergencymanager.model.TruckEntity;
 import com.cpe.emergencymanager.repository.FiremanRepository;
+import com.cpe.emergencymanager.repository.TruckRepository;
+import com.cpe.emergencymanager.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,21 +16,61 @@ import java.util.List;
 @RequestMapping("/api/resource")
 public class ResourceController {
 
-    @Autowired
-    private FiremanRepository firemanRepository;
+    private final ResourceService resourceService;
 
-    @GetMapping("/hello")
-    public Boolean pingServer() {
-        return true;
+    public ResourceController(ResourceService resourceService, TruckRepository truckRepository) {
+        this.resourceService = resourceService;
     }
 
-    @GetMapping("/fireman/{id}")
-    public FiremanEntity getFiremanById(@PathVariable("id") Integer id) {
-        return this.firemanRepository.findById(id);
+    @PostMapping("/add/fireman")
+    private ResponseEntity<FiremanEntity> addFireman(@RequestBody FiremanEntity firemanEntity) {
+        return ResponseEntity.ok(resourceService.saveFireman(firemanEntity));
     }
 
-    @GetMapping("/fireman")
-    public List<FiremanEntity> getAllFiremen() {
-        return this.firemanRepository.findAll();
+    @PostMapping("/add/truck")
+    private ResponseEntity<TruckEntity> addTruck(@RequestBody TruckEntity truckEntity) {
+        return ResponseEntity.ok(resourceService.saveTruck(truckEntity));
+    }
+
+    @GetMapping("/get/fireman")
+    private ResponseEntity<List<FiremanEntity>> getFiremen() {
+        return ResponseEntity.ok(resourceService.getAllFireman());
+    }
+
+    @GetMapping("/get/truck")
+    private ResponseEntity<List<TruckEntity>> getTrucks() {
+        return ResponseEntity.ok(resourceService.getAllTrucks());
+    }
+
+    @GetMapping("/get/fireman/{id}")
+    private ResponseEntity<FiremanEntity> getFireman(@PathVariable("id") int firemanId) {
+        return ResponseEntity.ok(resourceService.getFireman(firemanId));
+    }
+
+    @GetMapping("/get/truck/{id}")
+    private ResponseEntity<TruckEntity> getTruck(@PathVariable("id") int truckId) {
+        return ResponseEntity.ok(resourceService.getTruck(truckId));
+    }
+
+    @DeleteMapping("/delete/fireman/{id}")
+    private ResponseEntity<?> deleteFireman(@PathVariable("id") int firemanId) {
+        resourceService.deleteFireman(firemanId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete/truck/{id}")
+    private ResponseEntity<?> deleteTruck(@PathVariable("id") int truckId) {
+        resourceService.deleteTruck(truckId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/edit/fireman")
+    private ResponseEntity<FiremanEntity> editFireman(@RequestBody FiremanEntity firemanEntity) {
+        return ResponseEntity.ok(resourceService.saveFireman(firemanEntity));
+    }
+
+    @PutMapping("/edit/truck")
+    private ResponseEntity<TruckEntity> editTruck(@RequestBody TruckEntity truckEntity) {
+        return ResponseEntity.ok(resourceService.saveTruck(truckEntity));
     }
 }
