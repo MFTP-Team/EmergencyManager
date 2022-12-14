@@ -2,7 +2,6 @@ package com.cpe.emergencymanager.controllers;
 
 import com.cpe.emergencymanager.model.AlertEntity;
 import com.cpe.emergencymanager.services.AlertService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,5 +1,6 @@
 package com.cpe.emergencymanager.model;
 
+import com.cpe.emergencymanager.model.enums.ActionStatus;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -23,7 +24,7 @@ public class FireEntity {
     private Integer intensity;
     @Basic
     @Column(name = "status")
-    private String status;
+    private ActionStatus status;
     @OneToMany(mappedBy = "idFire")
     private Collection<AlertEntity> alertsById;
     @OneToMany(mappedBy = "idFire")
@@ -61,11 +62,11 @@ public class FireEntity {
         this.intensity = intensity;
     }
 
-    public String getStatus() {
+    public ActionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ActionStatus status) {
         this.status = status;
     }
 

@@ -2,11 +2,6 @@ package com.cpe.emergencymanager.services;
 
 import com.cpe.emergencymanager.model.AlertEntity;
 import com.cpe.emergencymanager.repository.AlertRepository;
-import org.geotools.geojson.GeoJSON;
-import org.geotools.geojson.GeoJSONUtil;
-import org.geotools.geojson.geom.GeometryJSON;
-import org.geotools.util.factory.GeoTools;
-import org.h2.util.geometry.GeoJsonUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

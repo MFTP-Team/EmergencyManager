@@ -1,12 +1,9 @@
 package com.cpe.emergencymanager.controllers;
 
-import com.cpe.emergencymanager.model.FireEntity;
 import com.cpe.emergencymanager.model.FiremanEntity;
 import com.cpe.emergencymanager.model.TruckEntity;
-import com.cpe.emergencymanager.repository.FiremanRepository;
 import com.cpe.emergencymanager.repository.TruckRepository;
 import com.cpe.emergencymanager.services.ResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

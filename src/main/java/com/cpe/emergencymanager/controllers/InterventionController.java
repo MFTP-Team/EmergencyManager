@@ -1,6 +1,5 @@
 package com.cpe.emergencymanager.controllers;
 
-import com.cpe.emergencymanager.model.FireEntity;
 import com.cpe.emergencymanager.model.InterventionEntity;
 import com.cpe.emergencymanager.services.InterventionService;
 import org.springframework.http.ResponseEntity;

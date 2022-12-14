@@ -18,9 +18,6 @@ public class FiremanEntity {
     @Column(name = "lastname")
     private String lastname;
     @Basic
-    @Column(name = "power")
-    private Integer power;
-    @Basic
     @Column(name = "id_station")
     private Integer idStation;
 
@@ -48,14 +45,6 @@ public class FiremanEntity {
         this.lastname = lastname;
     }
 
-    public Integer getPower() {
-        return power;
-    }
-
-    public void setPower(Integer power) {
-        this.power = power;
-    }
-
     public Integer getIdStation() {
         return idStation;
     }
@@ -69,11 +58,11 @@ public class FiremanEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FiremanEntity that = (FiremanEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(power, that.power) && Objects.equals(idStation, that.idStation);
+        return Objects.equals(id, that.id) && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(idStation, that.idStation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, power, idStation);
+        return Objects.hash(id, firstname, lastname, idStation);
     }
 }
