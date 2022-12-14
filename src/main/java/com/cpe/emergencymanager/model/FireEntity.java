@@ -8,17 +8,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "fire", schema = "public", catalog = "emergency")
-public class FireEntity {
+public class FireEntity implements LocalizedEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private Integer id;
     @Basic
     @Column(name = "longitude")
-    private Float longitude;
+    private Double longitude;
     @Basic
     @Column(name = "latitude")
-    private Float latitude;
+    private Double latitude;
     @Basic
     @Column(name = "intensity")
     private Integer intensity;
@@ -38,19 +38,19 @@ public class FireEntity {
         this.id = id;
     }
 
-    public Float getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Float longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    public Float getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Float latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
@@ -83,7 +83,7 @@ public class FireEntity {
         return Objects.hash(id, longitude, latitude, intensity, status);
     }
 
-    public Collection<AlertEntity> getAlertsById() {
+    public Collection<AlertEntity> getAlerts() {
         return alertsById;
     }
 
@@ -91,11 +91,17 @@ public class FireEntity {
         this.alertsById = alertsById;
     }
 
-    public Collection<InterventionEntity> getInterventionsById() {
+    public Collection<InterventionEntity> getInterventions() {
         return interventionsById;
     }
 
     public void setInterventionsById(Collection<InterventionEntity> interventionsById) {
         this.interventionsById = interventionsById;
+    }
+
+    public Double getRadius() {
+        // TODO : Calculer un radius cohérent par rapport à la carte
+        // Uitiliser un coéfficient mutliplicateur en fonction de l'échelle de l'intensité
+        return Double.valueOf(this.intensity);
     }
 }

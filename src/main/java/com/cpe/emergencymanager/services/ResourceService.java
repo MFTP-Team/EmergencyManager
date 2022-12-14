@@ -1,13 +1,20 @@
 package com.cpe.emergencymanager.services;
 
 import com.cpe.emergencymanager.model.FiremanEntity;
+import com.cpe.emergencymanager.model.StationEntity;
 import com.cpe.emergencymanager.model.TruckEntity;
 import com.cpe.emergencymanager.repository.FiremanRepository;
 import com.cpe.emergencymanager.repository.StationRepository;
 import com.cpe.emergencymanager.repository.TruckRepository;
+import mil.nga.sf.geojson.Feature;
+import mil.nga.sf.geojson.FeatureCollection;
+import mil.nga.sf.geojson.Point;
+import mil.nga.sf.geojson.Position;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ResourceService {
@@ -51,5 +58,21 @@ public class ResourceService {
 
     public List<TruckEntity> getAllTrucks() {
         return this.truckRepository.findAll();
+    }
+
+    public FeatureCollection getAllStationsGeo() {
+        List<StationEntity> list = this.stationRepository.findAll();
+        FeatureCollection featureCollection = new FeatureCollection();
+        for (StationEntity station : list) {
+            Feature feature = new Feature();
+            Map<String, Object> properties = new HashMap<String, Object>();
+            Point geometry = new Point();
+            geometry.setCoordinates(new Position(station.getLongitude(), station.getLatitude()));
+            properties.put("id", station.getId());
+            feature.setGeometry(geometry);
+            feature.setProperties(properties);
+            featureCollection.addFeature(feature);
+        }
+        return featureCollection;
     }
 }

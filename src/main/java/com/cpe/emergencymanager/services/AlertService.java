@@ -37,6 +37,10 @@ public class AlertService {
     }
 
     public void receiveAlert(AlertEntity alertEntity) {
-        // TODO : Traiter l'alerte
+        this.addAlert(alertEntity);
+        // Si l'alerte à une intensité au dessus de x
+        if(alertEntity.getIntensity() > 1) {
+            this.fireService.detectAlert(alertEntity);
+        }
     }
 }

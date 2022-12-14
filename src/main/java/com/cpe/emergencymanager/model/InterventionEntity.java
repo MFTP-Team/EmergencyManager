@@ -1,5 +1,6 @@
 package com.cpe.emergencymanager.model;
 
+import com.cpe.emergencymanager.model.enums.ActionStatus;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -18,7 +19,7 @@ public class InterventionEntity {
     private Timestamp date;
     @Basic
     @Column(name = "status")
-    private String status;
+    private ActionStatus status;
     @Basic
     @Column(name = "id_fire")
     private Integer idFire;
@@ -51,11 +52,11 @@ public class InterventionEntity {
         this.date = date;
     }
 
-    public String getStatus() {
+    public ActionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ActionStatus status) {
         this.status = status;
     }
 

@@ -4,6 +4,7 @@ import com.cpe.emergencymanager.model.FiremanEntity;
 import com.cpe.emergencymanager.model.TruckEntity;
 import com.cpe.emergencymanager.repository.TruckRepository;
 import com.cpe.emergencymanager.services.ResourceService;
+import mil.nga.sf.geojson.FeatureCollection;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,11 @@ public class ResourceController {
     @GetMapping("/get/truck")
     private ResponseEntity<List<TruckEntity>> getTrucks() {
         return ResponseEntity.ok(resourceService.getAllTrucks());
+    }
+
+    @GetMapping("/station/geo")
+    private ResponseEntity<FeatureCollection> getStationGeo() {
+        return ResponseEntity.ok(resourceService.getAllStationsGeo());
     }
 
     @GetMapping("/get/fireman/{id}")

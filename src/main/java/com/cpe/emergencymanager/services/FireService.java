@@ -1,7 +1,11 @@
 package com.cpe.emergencymanager.services;
 
+import com.cpe.emergencymanager.Constantes;
+import com.cpe.emergencymanager.model.AlertEntity;
 import com.cpe.emergencymanager.model.FireEntity;
+import com.cpe.emergencymanager.model.LocalizedEntity;
 import com.cpe.emergencymanager.repository.FireRepository;
+import com.cpe.emergencymanager.util.CoordinateUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +20,41 @@ public class FireService {
         this.resourceService = resourceService;
         this.fireRepository = fireRepository;
         this.interventionService = interventionService;
+    }
+
+    public void detectAlert(AlertEntity alert) {
+        // Voir les feux existants
+        // Si un feu est à moins de 100m, on ajoute l'alerte à ce feu
+        // Sinon, on crée un nouveau feu
+        // TODO : Stocker en cache la liste des feus
+        // Pour éviter de devoir récupérer la liste des feux à chaque alerte
+        List<FireEntity> fires = this.fireRepository.findAll();
+        FireEntity fireEntity = null;
+        for(FireEntity fire : fires) {
+            // Si l'alert est dans le radius d'un feu déjà existant on ajoute l'alerte à ce feu
+            if (CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert, 'K') < Constantes.FIRE_DETECTION_RADIUS) {
+                fireEntity = fire;
+                fireEntity.getAlerts().add(alert);
+                // TODO : Calculer une intensité en fonction des alertes
+                fireEntity.setIntensity(alert.getIntensity());
+                this.fireRepository.save(fireEntity);
+            }
+        }
+        if(fireEntity == null) {
+            fireEntity = new FireEntity();
+            fireEntity.setLatitude(alert.getLatitude());
+            fireEntity.setLongitude(alert.getLongitude());
+            fireEntity.setAlertsById(List.of(alert));
+            this.fireRepository.save(fireEntity);
+        }
+        this.interventionService.triggerIntervention(fireEntity);
+    }
+
+    public Boolean isAlertInFire(FireEntity fire, AlertEntity alert) {
+        if(CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert, 'K') < fire.getRadius()) {
+            return true;
+        }
+        return false;
     }
 
     public FireEntity addFire(FireEntity fireEntity) {
