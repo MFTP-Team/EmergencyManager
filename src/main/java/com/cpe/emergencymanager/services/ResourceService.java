@@ -52,8 +52,24 @@ public class ResourceService {
         this.truckRepository.deleteById(truckId);
     }
 
+    public StationEntity saveStation(StationEntity stationEntity) {
+        return this.stationRepository.save(stationEntity);
+    }
+
+    public StationEntity getStation(int stationId) {
+        return this.stationRepository.findById(stationId);
+    }
+
+    public void deleteStation(int stationId) {
+        this.stationRepository.deleteById(stationId);
+    }
+
     public List<FiremanEntity> getAllFireman() {
         return this.firemanRepository.findAll();
+    }
+
+    public List<StationEntity> getAllStations() {
+        return this.stationRepository.findAll();
     }
 
     public List<TruckEntity> getAllTrucks() {

@@ -1,6 +1,7 @@
 package com.cpe.emergencymanager.controllers;
 
 import com.cpe.emergencymanager.model.FiremanEntity;
+import com.cpe.emergencymanager.model.StationEntity;
 import com.cpe.emergencymanager.model.TruckEntity;
 import com.cpe.emergencymanager.repository.TruckRepository;
 import com.cpe.emergencymanager.services.ResourceService;
@@ -20,6 +21,11 @@ public class ResourceController {
         this.resourceService = resourceService;
     }
 
+    @GetMapping("/station/geo")
+    private ResponseEntity<FeatureCollection> getStationGeo() {
+        return ResponseEntity.ok(resourceService.getAllStationsGeo());
+    }
+
     @PostMapping("/add/fireman")
     private ResponseEntity<FiremanEntity> addFireman(@RequestBody FiremanEntity firemanEntity) {
         return ResponseEntity.ok(resourceService.saveFireman(firemanEntity));
@@ -30,19 +36,24 @@ public class ResourceController {
         return ResponseEntity.ok(resourceService.saveTruck(truckEntity));
     }
 
+    @PostMapping("/add/station")
+    private ResponseEntity<StationEntity> addStation(@RequestBody StationEntity stationEntity) {
+        return ResponseEntity.ok(resourceService.saveStation(stationEntity));
+    }
+
     @GetMapping("/get/fireman")
     private ResponseEntity<List<FiremanEntity>> getFiremen() {
         return ResponseEntity.ok(resourceService.getAllFireman());
     }
 
+    @GetMapping("/get/station")
+    private ResponseEntity<List<StationEntity>> getStations() {
+        return ResponseEntity.ok(resourceService.getAllStations());
+    }
+
     @GetMapping("/get/truck")
     private ResponseEntity<List<TruckEntity>> getTrucks() {
         return ResponseEntity.ok(resourceService.getAllTrucks());
-    }
-
-    @GetMapping("/station/geo")
-    private ResponseEntity<FeatureCollection> getStationGeo() {
-        return ResponseEntity.ok(resourceService.getAllStationsGeo());
     }
 
     @GetMapping("/get/fireman/{id}")
@@ -53,6 +64,17 @@ public class ResourceController {
     @GetMapping("/get/truck/{id}")
     private ResponseEntity<TruckEntity> getTruck(@PathVariable("id") int truckId) {
         return ResponseEntity.ok(resourceService.getTruck(truckId));
+    }
+
+    @GetMapping("/get/station/{id}")
+    private ResponseEntity<StationEntity> getStation(@PathVariable("id") int stationId) {
+        return ResponseEntity.ok(resourceService.getStation(stationId));
+    }
+
+    @DeleteMapping("/delete/station/{id}")
+    private ResponseEntity<StationEntity> deleteStation(@PathVariable("id") int stationId) {
+        resourceService.deleteStation(stationId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete/fireman/{id}")
@@ -75,5 +97,10 @@ public class ResourceController {
     @PutMapping("/edit/truck")
     private ResponseEntity<TruckEntity> editTruck(@RequestBody TruckEntity truckEntity) {
         return ResponseEntity.ok(resourceService.saveTruck(truckEntity));
+    }
+
+    @PutMapping("/edit/station")
+    private ResponseEntity<StationEntity> editStation(@RequestBody StationEntity stationEntity) {
+        return ResponseEntity.ok(resourceService.saveStation(stationEntity));
     }
 }
