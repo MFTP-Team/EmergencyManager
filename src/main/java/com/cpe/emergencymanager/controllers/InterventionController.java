@@ -31,7 +31,7 @@ public class InterventionController {
         return ResponseEntity.ok(interventionService.getIntervention(interventionId));
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<InterventionEntity> deleteIntervention(int interventionId) {
         interventionService.deleteIntervention(interventionId);
          return ResponseEntity.noContent().build();

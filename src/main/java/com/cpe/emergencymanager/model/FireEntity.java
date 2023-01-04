@@ -1,7 +1,7 @@
 package com.cpe.emergencymanager.model;
 
 import com.cpe.emergencymanager.model.enums.ActionStatus;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.util.Collection;
 import java.util.Objects;
