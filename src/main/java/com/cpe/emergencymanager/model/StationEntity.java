@@ -1,8 +1,10 @@
 package com.cpe.emergencymanager.model;
 
+import com.cpe.emergencymanager.model.enums.ResourceStatus;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -74,5 +76,19 @@ public class StationEntity {
 
     public void setTrucksById(Collection<TruckEntity> trucksById) {
         this.trucksById = trucksById;
+    }
+
+    public boolean hasEnoughAvaliableTruck(Integer size) {
+        return trucksById.stream()
+                .filter(truckEntity -> truckEntity.getStatus() == ResourceStatus.AVAILABLE)
+                .count() >= size;
+    }
+
+    public Collection<TruckEntity> getAvailableTrucks() {
+        return trucksById.stream().filter(truckEntity -> truckEntity.getStatus() == ResourceStatus.AVAILABLE).toList();
+    }
+
+    public boolean hasEnoughFireman(Integer size) {
+        return firemenById.size() >= size;
     }
 }

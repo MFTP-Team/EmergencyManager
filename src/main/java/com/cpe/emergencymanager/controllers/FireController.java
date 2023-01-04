@@ -2,6 +2,7 @@ package com.cpe.emergencymanager.controllers;
 
 import com.cpe.emergencymanager.model.FireEntity;
 import com.cpe.emergencymanager.services.FireService;
+import mil.nga.sf.geojson.FeatureCollection;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,10 @@ public class FireController {
 
     public FireController(FireService fireService) {
         this.fireService = fireService;
+    }
+
+    public ResponseEntity<FireEntity> endFire(int fireId) {
+        return ResponseEntity.ok(fireService.endFire(fireId));
     }
 
     @PostMapping("/add")
@@ -41,4 +46,10 @@ public class FireController {
     public ResponseEntity<FireEntity> editFire(@RequestBody FireEntity fireEntity) {
         return ResponseEntity.ok(fireService.editFire(fireEntity));
     }
+
+    @GetMapping("/geo")
+    private ResponseEntity<FeatureCollection> getFireGeo() {
+        return ResponseEntity.ok(fireService.getAllFireGeo());
+    }
 }
+

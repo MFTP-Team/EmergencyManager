@@ -4,12 +4,23 @@ import com.cpe.emergencymanager.Constantes;
 import com.cpe.emergencymanager.model.AlertEntity;
 import com.cpe.emergencymanager.model.FireEntity;
 import com.cpe.emergencymanager.model.LocalizedEntity;
+import com.cpe.emergencymanager.model.StationEntity;
+import com.cpe.emergencymanager.model.enums.ActionStatus;
+import com.cpe.emergencymanager.model.enums.ResourceStatus;
 import com.cpe.emergencymanager.repository.FireRepository;
 import com.cpe.emergencymanager.util.CoordinateUtil;
+import lombok.extern.slf4j.Slf4j;
+import mil.nga.sf.geojson.Feature;
+import mil.nga.sf.geojson.FeatureCollection;
+import mil.nga.sf.geojson.Point;
+import mil.nga.sf.geojson.Position;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
 public class FireService {
     private final ResourceService resourceService;
@@ -22,12 +33,18 @@ public class FireService {
         this.interventionService = interventionService;
     }
 
+    /**
+     * Regarde si l'alerte est une alerte d'un nouveau feu
+     * Si c'est le cas création d'un nouveau feu, sinon ajout à l'existant
+     * @param alert
+     */
     public void detectAlert(AlertEntity alert) {
         // Voir les feux existants
         // Si un feu est à moins de 100m, on ajoute l'alerte à ce feu
         // Sinon, on crée un nouveau feu
         // TODO : Stocker en cache la liste des feus
         // Pour éviter de devoir récupérer la liste des feux à chaque alerte
+        log.info("Traitement de l'alerte {}", alert.getId());
         List<FireEntity> fires = this.fireRepository.findAll();
         FireEntity fireEntity = null;
         for(FireEntity fire : fires) {
@@ -38,6 +55,7 @@ public class FireService {
                 // TODO : Calculer une intensité en fonction des alertes
                 fireEntity.setIntensity(alert.getIntensity());
                 this.fireRepository.save(fireEntity);
+                log.info("Alerte ajoutée au feu existant {}", fireEntity.getId());
             }
         }
         if(fireEntity == null) {
@@ -46,15 +64,30 @@ public class FireService {
             fireEntity.setLongitude(alert.getLongitude());
             fireEntity.setAlertsById(List.of(alert));
             this.fireRepository.save(fireEntity);
+            log.info("Nouveau feu créé {}", fireEntity.getId());
         }
         this.interventionService.triggerIntervention(fireEntity);
     }
 
-    public Boolean isAlertInFire(FireEntity fire, AlertEntity alert) {
-        if(CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert, 'K') < fire.getRadius()) {
-            return true;
-        }
-        return false;
+    /**
+     * Met fin à un feu et à toutes ses interventions en cours
+     * @param fireId
+     * @return
+     */
+    public FireEntity endFire(int fireId) {
+        log.info("Fin du feu {}", fireId);
+        FireEntity fire = this.fireRepository.findById(fireId);
+        fire.getInterventions().forEach(interventionEntity -> {
+            interventionEntity.setStatus(ActionStatus.FINISHED);
+            interventionEntity.getTrucks().forEach(truckEntity -> {
+                truckEntity.setStatus(ResourceStatus.AVAILABLE);
+                this.resourceService.saveTruck(truckEntity);
+            });
+            this.interventionService.saveIntervention(interventionEntity);
+        });
+        fire.setStatus(ActionStatus.FINISHED);
+        log.info("Toutes les ressources ont été libérées pour le feu {}", fireId);
+        return fireRepository.save(fire);
     }
 
     public FireEntity addFire(FireEntity fireEntity) {
@@ -75,5 +108,22 @@ public class FireService {
 
     public List<FireEntity> getFires() {
         return this.fireRepository.findAll();
+    }
+
+    public FeatureCollection getAllFireGeo() {
+        List<FireEntity> list = this.fireRepository.findAll();
+        FeatureCollection featureCollection = new FeatureCollection();
+        for (FireEntity fire : list) {
+            Feature feature = new Feature();
+            Map<String, Object> properties = new HashMap<String, Object>();
+            Point geometry = new Point();
+            geometry.setCoordinates(new Position(fire.getLongitude(), fire.getLatitude()));
+            properties.put("id", fire.getId());
+            properties.put("type", "FIRE");
+            feature.setGeometry(geometry);
+            feature.setProperties(properties);
+            featureCollection.addFeature(feature);
+        }
+        return featureCollection;
     }
 }

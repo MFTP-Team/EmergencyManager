@@ -85,6 +85,7 @@ public class ResourceService {
             Point geometry = new Point();
             geometry.setCoordinates(new Position(station.getLongitude(), station.getLatitude()));
             properties.put("id", station.getId());
+            properties.put("type", "STATION");
             feature.setGeometry(geometry);
             feature.setProperties(properties);
             featureCollection.addFeature(feature);

@@ -1,5 +1,6 @@
 package com.cpe.emergencymanager.model;
 
+import com.cpe.emergencymanager.model.enums.ResourceStatus;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -23,6 +24,10 @@ public class TruckEntity implements LocalizedEntity {
     @Basic
     @Column(name = "id_station")
     private Integer idStation;
+
+    @Basic
+    @Column(name = "status")
+    private ResourceStatus status;
 
     public Integer getId() {
         return id;
@@ -62,6 +67,14 @@ public class TruckEntity implements LocalizedEntity {
 
     public void setIdStation(Integer idStation) {
         this.idStation = idStation;
+    }
+
+    public ResourceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ResourceStatus status) {
+        this.status = status;
     }
 
     @Override

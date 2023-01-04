@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "alert", schema = "public", catalog = "emergency")
-public class AlertEntity {
+public class AlertEntity implements LocalizedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
