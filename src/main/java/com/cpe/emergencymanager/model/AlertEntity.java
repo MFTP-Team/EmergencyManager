@@ -29,6 +29,10 @@ public class AlertEntity implements LocalizedEntity {
     @Column(name = "id_fire")
     private Integer idFire;
 
+    @Basic
+    @Column(name = "id_sensor")
+    private String idSensor;
+
     public Integer getId() {
         return id;
     }
@@ -67,6 +71,14 @@ public class AlertEntity implements LocalizedEntity {
 
     public void setIntensity(Integer intensity) {
         this.intensity = intensity;
+    }
+
+    public String getIdSensor() {
+        return idSensor;
+    }
+
+    public void setIdSensor(String idSensor) {
+        this.idSensor = idSensor;
     }
 
     @Override

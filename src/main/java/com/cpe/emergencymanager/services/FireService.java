@@ -4,7 +4,6 @@ import com.cpe.emergencymanager.Constantes;
 import com.cpe.emergencymanager.model.AlertEntity;
 import com.cpe.emergencymanager.model.FireEntity;
 import com.cpe.emergencymanager.model.LocalizedEntity;
-import com.cpe.emergencymanager.model.StationEntity;
 import com.cpe.emergencymanager.model.enums.ActionStatus;
 import com.cpe.emergencymanager.model.enums.ResourceStatus;
 import com.cpe.emergencymanager.repository.FireRepository;
@@ -15,12 +14,14 @@ import mil.nga.sf.geojson.FeatureCollection;
 import mil.nga.sf.geojson.Point;
 import mil.nga.sf.geojson.Polygon;
 import mil.nga.sf.geojson.Position;
+import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
@@ -33,6 +34,43 @@ public class FireService {
         this.resourceService = resourceService;
         this.fireRepository = fireRepository;
         this.interventionService = interventionService;
+    }
+
+    /**
+     * Calcul le nouveau centre d'un feu en fonction des alerts qu'il a reçu
+     * @param fire
+     * @return
+     */
+    public FireEntity setFireCenter(FireEntity fire) {
+        List<Coordinate> alertsCoordinates = new ArrayList<>();
+        for(AlertEntity alert : fire.getAlerts()) {
+            alertsCoordinates.add(new Coordinate(alert.getLatitude(), alert.getLongitude()));
+        }
+        Coordinate coordinate = CoordinateUtil.getCentroidFromCoordinates(alertsCoordinates);
+        fire.setLatitude(coordinate.y);
+        fire.setLongitude(coordinate.x);
+        return fire;
+    }
+
+    /**
+     * Récupère l'alert la plus loin du centre du feu
+     * @param fire
+     * @return
+     */
+    public double getFarestAlertFromFire(FireEntity fire) {
+        if(fire.getAlerts().size() == 0) {
+            return 0;
+        }
+        AtomicReference<AlertEntity> alert = new AtomicReference<>((AlertEntity) fire.getAlerts().toArray()[0]);
+        AtomicReference<Double> distanceAlert = new AtomicReference<>(CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert, 'K'));
+        fire.getAlerts().forEach(alert1 -> {
+            Double newAlertDistance = CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert1, 'K');
+            if(newAlertDistance > distanceAlert.get()) {
+                distanceAlert.set(newAlertDistance);
+                alert.set(alert1);
+            }
+        });
+        return distanceAlert.get();
     }
 
     /**
@@ -54,8 +92,9 @@ public class FireService {
             if (CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert, 'K') < Constantes.FIRE_DETECTION_RADIUS) {
                 fireEntity = fire;
                 fireEntity.getAlerts().add(alert);
-                // TODO : Calculer une intensité en fonction des alertes
-                fireEntity.setIntensity(alert.getIntensity());
+                fireEntity = this.setFireCenter(fireEntity);
+                // L'intensité correspond à la distance avec l'alert la plus loin
+                fireEntity.setIntensity((int) this.getFarestAlertFromFire(fireEntity));
                 this.fireRepository.save(fireEntity);
                 log.info("Alerte ajoutée au feu existant {}", fireEntity.getId());
             }
