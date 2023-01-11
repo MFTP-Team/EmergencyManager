@@ -46,7 +46,12 @@ public class FireService {
         for(AlertEntity alert : fire.getAlerts()) {
             alertsCoordinates.add(new Coordinate(alert.getLatitude(), alert.getLongitude()));
         }
-        Coordinate coordinate = CoordinateUtil.getCentroidFromCoordinates(alertsCoordinates);
+        Coordinate coordinate;
+        if(alertsCoordinates.size() > 1) {
+            coordinate = CoordinateUtil.getCentroidFromCoordinates(alertsCoordinates);
+        } else {
+            coordinate = alertsCoordinates.get(0);
+        }
         fire.setLatitude(coordinate.y);
         fire.setLongitude(coordinate.x);
         return fire;
@@ -61,16 +66,16 @@ public class FireService {
         if(fire.getAlerts().size() == 0) {
             return 0;
         }
-        AtomicReference<AlertEntity> alert = new AtomicReference<>((AlertEntity) fire.getAlerts().toArray()[0]);
-        AtomicReference<Double> distanceAlert = new AtomicReference<>(CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert, 'K'));
+        final AlertEntity[] alert = {(AlertEntity) fire.getAlerts().toArray()[0]};
+        final Double[] distanceAlert = {CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert[0], 'K')};
         fire.getAlerts().forEach(alert1 -> {
             Double newAlertDistance = CoordinateUtil.distance((LocalizedEntity) fire, (LocalizedEntity) alert1, 'K');
-            if(newAlertDistance > distanceAlert.get()) {
-                distanceAlert.set(newAlertDistance);
-                alert.set(alert1);
+            if(newAlertDistance > distanceAlert[0]) {
+                distanceAlert[0] = newAlertDistance;
+                alert[0] = alert1;
             }
         });
-        return distanceAlert.get();
+        return distanceAlert[0];
     }
 
     /**

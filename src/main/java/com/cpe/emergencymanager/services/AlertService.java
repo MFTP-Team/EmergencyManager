@@ -48,7 +48,7 @@ public class AlertService {
         log.info("Alerte reçue d'intensité : " + alertEntity.getIntensity());
         this.addAlert(alertEntity);
         // Si l'alerte à une intensité au dessus de x
-        if(alertEntity.getIntensity() > 1) {
+        if(alertEntity.getIntensity() > 0) {
             this.fireService.detectAlert(alertEntity);
         }
         log.info("Alerte traitée");
