@@ -102,7 +102,7 @@ public class ResourceService {
             Point geometry = new Point();
             geometry.setCoordinates(new Position(truck.getLongitude(), truck.getLatitude()));
             properties.put("id", truck.getId());
-            properties.put("type", "TRUCKS");
+            properties.put("type", "TRUCK");
             feature.setGeometry(geometry);
             feature.setProperties(properties);
             featureCollection.addFeature(feature);
