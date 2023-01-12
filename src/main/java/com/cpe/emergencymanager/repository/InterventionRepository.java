@@ -21,7 +21,7 @@ public interface InterventionRepository extends Repository<InterventionEntity, I
     List<InterventionEntity> findAll();
 
     @Modifying
-    @Query(value = "insert into truck_intervention values (:truckId, :interventionId)")
+    @Query(value = "insert into truck_intervention values (:truckId, :interventionId)", nativeQuery = true)
     @Transactional
     void linkTruckToIntervention(Integer interventionId, Integer truckId);
 }
