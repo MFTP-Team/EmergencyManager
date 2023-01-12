@@ -109,6 +109,7 @@ public class FireService {
             fireEntity.setLatitude(alert.getLatitude());
             fireEntity.setLongitude(alert.getLongitude());
             fireEntity.setAlertsById(List.of(alert));
+            fireEntity.setIntensity(alert.getIntensity());
             this.fireRepository.save(fireEntity);
             log.info("Nouveau feu créé {}", fireEntity.getId());
         }
