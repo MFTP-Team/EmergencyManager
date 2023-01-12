@@ -106,4 +106,8 @@ public class InterventionService {
                 });
         return interventionEntity;
     }
+
+    public List<InterventionEntity> getInterventionsWithStatus(ActionStatus status) {
+        return this.interventionRepository.findByStatus(status);
+    }
 }

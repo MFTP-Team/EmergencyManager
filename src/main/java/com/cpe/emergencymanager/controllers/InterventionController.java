@@ -1,6 +1,7 @@
 package com.cpe.emergencymanager.controllers;
 
 import com.cpe.emergencymanager.model.InterventionEntity;
+import com.cpe.emergencymanager.model.enums.ActionStatus;
 import com.cpe.emergencymanager.services.InterventionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,12 @@ public class InterventionController {
     @GetMapping("/get")
     public ResponseEntity<List<InterventionEntity>> getInterventionList() {
         return ResponseEntity.ok(interventionService.getInterventions());
+    }
+
+    @CrossOrigin("*")
+    @GetMapping("/get/{status}")
+    public ResponseEntity<List<InterventionEntity>> getOnGoingInterventionlist(@RequestParam ActionStatus status) {
+        return ResponseEntity.ok(interventionService.getInterventionsWithStatus(status));
     }
 
     @CrossOrigin("*")
