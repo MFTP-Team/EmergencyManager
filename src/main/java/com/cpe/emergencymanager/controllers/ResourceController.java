@@ -21,9 +21,16 @@ public class ResourceController {
         this.resourceService = resourceService;
     }
 
-    @GetMapping("/station/geo")
+    @CrossOrigin("*")
+    @GetMapping("/station/geo/point")
     private ResponseEntity<FeatureCollection> getStationGeo() {
         return ResponseEntity.ok(resourceService.getAllStationsGeo());
+    }
+
+    @CrossOrigin("*")
+    @GetMapping("/truck/geo/point")
+    private ResponseEntity<FeatureCollection> getTrucksGeo() {
+        return ResponseEntity.ok(resourceService.getAllTrucksGeo());
     }
 
     @PostMapping("/add/fireman")

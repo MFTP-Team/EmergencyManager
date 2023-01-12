@@ -13,9 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import mil.nga.sf.geojson.Feature;
 import mil.nga.sf.geojson.FeatureCollection;
 import mil.nga.sf.geojson.Point;
+import mil.nga.sf.geojson.Polygon;
 import mil.nga.sf.geojson.Position;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +112,7 @@ public class FireService {
         return this.fireRepository.findAll();
     }
 
-    public FeatureCollection getAllFireGeo() {
+    public FeatureCollection getAllFireGeoPoints() {
         List<FireEntity> list = this.fireRepository.findAll();
         FeatureCollection featureCollection = new FeatureCollection();
         for (FireEntity fire : list) {
@@ -121,6 +123,33 @@ public class FireService {
             properties.put("id", fire.getId());
             properties.put("type", "FIRE");
             feature.setGeometry(geometry);
+            feature.setProperties(properties);
+            featureCollection.addFeature(feature);
+        }
+        return featureCollection;
+    }
+
+    public FeatureCollection getAllFiresGeoPolygon() {
+        List<FireEntity> list = this.fireRepository.findAll();
+        FeatureCollection featureCollection = new FeatureCollection();
+        for (FireEntity fire : list) {
+            Feature feature = new Feature();
+            Map<String, Object> properties = new HashMap<String, Object>();
+            Polygon polygon = new Polygon();
+            List<Position> positions = new ArrayList<Position>();
+            Integer NUM_POINTS = 30;
+            for (int i = 0; i < NUM_POINTS; i++) {
+                double angle = 360.0 / NUM_POINTS * i;
+                double latitude = fire.getLatitude() + 0.00001*fire.getIntensity()* Math.cos(Math.toRadians(angle));
+                double longitude = fire.getLongitude() + 0.00001*fire.getIntensity() * Math.sin(Math.toRadians(angle));
+                positions.add(new Position(latitude, longitude));
+            }
+            List<List<Position>> cord = new ArrayList<>();
+            cord.add(positions);
+            polygon.setCoordinates(cord);
+            properties.put("id", fire.getId());
+            properties.put("type", "FIRE");
+            feature.setGeometry(polygon);
             feature.setProperties(properties);
             featureCollection.addFeature(feature);
         }

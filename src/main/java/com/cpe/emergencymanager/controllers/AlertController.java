@@ -33,6 +33,7 @@ public class AlertController {
         return ResponseEntity.noContent().build();
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get")
     public ResponseEntity<List<AlertEntity>> getAlert() {
         return ResponseEntity.ok(alertService.getAlerts());

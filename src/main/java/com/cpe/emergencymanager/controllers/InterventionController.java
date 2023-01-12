@@ -21,6 +21,7 @@ public class InterventionController {
         return ResponseEntity.ok(interventionService.saveIntervention(interventionEntity));
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get")
     public ResponseEntity<List<InterventionEntity>> getInterventionList() {
         return ResponseEntity.ok(interventionService.getInterventions());

@@ -92,4 +92,21 @@ public class ResourceService {
         }
         return featureCollection;
     }
+
+    public FeatureCollection getAllTrucksGeo() {
+        List<TruckEntity> list = this.truckRepository.findAll();
+        FeatureCollection featureCollection = new FeatureCollection();
+        for (TruckEntity truck : list) {
+            Feature feature = new Feature();
+            Map<String, Object> properties = new HashMap<String, Object>();
+            Point geometry = new Point();
+            geometry.setCoordinates(new Position(truck.getLongitude(), truck.getLatitude()));
+            properties.put("id", truck.getId());
+            properties.put("type", "TRUCKS");
+            feature.setGeometry(geometry);
+            feature.setProperties(properties);
+            featureCollection.addFeature(feature);
+        }
+        return featureCollection;
+    }
 }

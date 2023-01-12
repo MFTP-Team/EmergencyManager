@@ -47,9 +47,18 @@ public class FireController {
         return ResponseEntity.ok(fireService.editFire(fireEntity));
     }
 
-    @GetMapping("/geo")
-    private ResponseEntity<FeatureCollection> getFireGeo() {
-        return ResponseEntity.ok(fireService.getAllFireGeo());
+
+    @CrossOrigin("*")
+    @GetMapping("/geo/point")
+    private ResponseEntity<FeatureCollection> getFireGeoPoints() {
+        return ResponseEntity.ok(fireService.getAllFireGeoPoints());
     }
+
+    @CrossOrigin("*")
+    @GetMapping("/geo/polygon")
+    private ResponseEntity<FeatureCollection> getStationGeoPolygon() {
+        return ResponseEntity.ok(fireService.getAllFiresGeoPolygon());
+    }
+
 }
 
