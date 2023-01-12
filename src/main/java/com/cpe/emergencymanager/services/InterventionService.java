@@ -102,10 +102,8 @@ public class InterventionService {
                 .forEach(fireTruckEntity -> {
                     fireTruckEntity.setStatus(ResourceStatus.UNAVAILABLE);
                     this.resourceService.saveTruck(fireTruckEntity);
+                    this.interventionRepository.linkTruckToIntervention(interventionEntity.getId(), fireTruckEntity.getId());
                 });
-        InterventionEntity inter = interventionRepository.findById(interventionEntity.getId());
-        inter.setTrucks(trucksInAction);
-        interventionRepository.save(inter);
         return interventionEntity;
     }
 
