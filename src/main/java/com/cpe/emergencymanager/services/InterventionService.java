@@ -94,7 +94,6 @@ public class InterventionService {
         interventionEntity.setIdFire(fireEntity.getId());
         interventionEntity.setStatus(ActionStatus.IN_PROGRESS);
         interventionEntity.setDate(new Timestamp(System.currentTimeMillis()));
-        interventionEntity.setTrucks(trucksInAction);
         log.info("Intervention créée pour le feu {},{} camions en route, la caserne {} s'en charge", fireEntity.getId(),
                 finalFireTruckInNeed, caserne.getId());
         interventionRepository.save(interventionEntity);
@@ -104,6 +103,8 @@ public class InterventionService {
                     fireTruckEntity.setStatus(ResourceStatus.UNAVAILABLE);
                     this.resourceService.saveTruck(fireTruckEntity);
                 });
+        interventionEntity.setTrucks(trucksInAction);
+        interventionRepository.save(interventionEntity);
         return interventionEntity;
     }
 
