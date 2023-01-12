@@ -21,33 +21,38 @@ public class FireController {
         return ResponseEntity.ok(fireService.endFire(fireId));
     }
 
+    @CrossOrigin("*")
     @PostMapping("/add")
     public ResponseEntity<FireEntity> addFire(@RequestBody FireEntity fireEntity) {
         return ResponseEntity.ok(fireService.addFire(fireEntity));
     }
 
+    @CrossOrigin("*")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteFire(@PathVariable("id") int fireId) {
         fireService.deleteFire(fireId);
         return ResponseEntity.noContent().build();
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get")
     public ResponseEntity<List<FireEntity>> getFireList() {
         return ResponseEntity.ok(fireService.getFires());
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/{id}")
     public ResponseEntity<FireEntity> getFire(@PathVariable("id") int fireId) {
         return ResponseEntity.ok(fireService.getFire(fireId));
     }
 
+    @CrossOrigin("*")
     @PutMapping("/edit")
     public ResponseEntity<FireEntity> editFire(@RequestBody FireEntity fireEntity) {
         return ResponseEntity.ok(fireService.editFire(fireEntity));
     }
 
-
+    
     @CrossOrigin("*")
     @GetMapping("/geo/point")
     private ResponseEntity<FeatureCollection> getFireGeoPoints() {

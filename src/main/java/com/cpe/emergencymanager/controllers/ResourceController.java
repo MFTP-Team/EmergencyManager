@@ -33,79 +33,94 @@ public class ResourceController {
         return ResponseEntity.ok(resourceService.getAllTrucksGeo());
     }
 
+    @CrossOrigin("*")
     @PostMapping("/add/fireman")
     private ResponseEntity<FiremanEntity> addFireman(@RequestBody FiremanEntity firemanEntity) {
         return ResponseEntity.ok(resourceService.saveFireman(firemanEntity));
     }
 
+    @CrossOrigin("*")
     @PostMapping("/add/truck")
     private ResponseEntity<TruckEntity> addTruck(@RequestBody TruckEntity truckEntity) {
         return ResponseEntity.ok(resourceService.saveTruck(truckEntity));
     }
 
+    @CrossOrigin("*")
     @PostMapping("/add/station")
     private ResponseEntity<StationEntity> addStation(@RequestBody StationEntity stationEntity) {
         return ResponseEntity.ok(resourceService.saveStation(stationEntity));
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/fireman")
     private ResponseEntity<List<FiremanEntity>> getFiremen() {
         return ResponseEntity.ok(resourceService.getAllFireman());
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/station")
     private ResponseEntity<List<StationEntity>> getStations() {
         return ResponseEntity.ok(resourceService.getAllStations());
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/truck")
     private ResponseEntity<List<TruckEntity>> getTrucks() {
         return ResponseEntity.ok(resourceService.getAllTrucks());
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/fireman/{id}")
     private ResponseEntity<FiremanEntity> getFireman(@PathVariable("id") int firemanId) {
         return ResponseEntity.ok(resourceService.getFireman(firemanId));
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/truck/{id}")
     private ResponseEntity<TruckEntity> getTruck(@PathVariable("id") int truckId) {
         return ResponseEntity.ok(resourceService.getTruck(truckId));
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/station/{id}")
     private ResponseEntity<StationEntity> getStation(@PathVariable("id") int stationId) {
         return ResponseEntity.ok(resourceService.getStation(stationId));
     }
 
+    @CrossOrigin("*")
     @DeleteMapping("/delete/station/{id}")
     private ResponseEntity<StationEntity> deleteStation(@PathVariable("id") int stationId) {
         resourceService.deleteStation(stationId);
         return ResponseEntity.noContent().build();
     }
 
+    @CrossOrigin("*")
     @DeleteMapping("/delete/fireman/{id}")
     private ResponseEntity<?> deleteFireman(@PathVariable("id") int firemanId) {
         resourceService.deleteFireman(firemanId);
         return ResponseEntity.noContent().build();
     }
 
+    @CrossOrigin("*")
     @DeleteMapping("/delete/truck/{id}")
     private ResponseEntity<?> deleteTruck(@PathVariable("id") int truckId) {
         resourceService.deleteTruck(truckId);
         return ResponseEntity.noContent().build();
     }
 
+    @CrossOrigin("*")
     @PutMapping("/edit/fireman")
     private ResponseEntity<FiremanEntity> editFireman(@RequestBody FiremanEntity firemanEntity) {
         return ResponseEntity.ok(resourceService.saveFireman(firemanEntity));
     }
 
+    @CrossOrigin("*")
     @PutMapping("/edit/truck")
     private ResponseEntity<TruckEntity> editTruck(@RequestBody TruckEntity truckEntity) {
         return ResponseEntity.ok(resourceService.saveTruck(truckEntity));
     }
 
+    @CrossOrigin("*")
     @PutMapping("/edit/station")
     private ResponseEntity<StationEntity> editStation(@RequestBody StationEntity stationEntity) {
         return ResponseEntity.ok(resourceService.saveStation(stationEntity));

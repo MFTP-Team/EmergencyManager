@@ -17,16 +17,19 @@ public class AlertController {
         this.alertService = alertService;
     }
 
+    @CrossOrigin("*")
     @PostMapping("/add")
     public ResponseEntity<AlertEntity> addAlert(@RequestBody AlertEntity alertEntity) {
         return ResponseEntity.ok(alertService.addAlert(alertEntity));
     }
 
+    @CrossOrigin("*")
     @PutMapping("/edit")
     public ResponseEntity<AlertEntity> editAlert(@RequestBody AlertEntity alertEntity) {
         return ResponseEntity.ok(alertService.editAlert(alertEntity));
     }
 
+    @CrossOrigin("*")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteAlert(@PathVariable("id") int alertId) {
         alertService.deleteAlert(alertId);
@@ -39,11 +42,13 @@ public class AlertController {
         return ResponseEntity.ok(alertService.getAlerts());
     }
 
+    @CrossOrigin("*")
     @GetMapping("/get/{id}")
     public ResponseEntity<AlertEntity> getAlert(@PathVariable("id") int alertId) {
         return ResponseEntity.ok(alertService.getAlert(alertId));
     }
 
+    @CrossOrigin("*")
     @PostMapping
     public void receiveAlert(@RequestBody AlertEntity alertEntity) {
         alertService.receiveAlert(alertEntity);
