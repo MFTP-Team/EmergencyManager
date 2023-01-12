@@ -106,8 +106,8 @@ public class FireService {
         }
         if(fireEntity == null) {
             fireEntity = new FireEntity();
-            fireEntity.setLatitude(alert.getLatitude());
-            fireEntity.setLongitude(alert.getLongitude());
+            fireEntity.setLatitude(alert.getLongitude());
+            fireEntity.setLongitude(alert.getLatitude());
             fireEntity.setAlertsById(List.of(alert));
             fireEntity.setIntensity(alert.getIntensity());
             this.fireRepository.save(fireEntity);
